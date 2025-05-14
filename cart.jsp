@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="java.sql.*" %>
+<%@ page import="db.DBConnect" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,13 +41,15 @@
             width: 150px;
         }
         .menu_wrap {
-            width: 250px;
+            width: 350px;
             height: 80px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .menu {
+        		width: 70px;
+            text-align: center;
             font-size: 16px;
             cursor: pointer;
             user-select: none;
@@ -141,6 +145,7 @@
 		            <img class="logo_img" src="images/logo.png" alt="Logo">
 		        </div>
 		        <div class="menu_wrap">
+		        		<div class="menu" class="add_item">상품 추가</div>
 		            <div class="menu" onclick="location.href='login.jsp'">로그인</div>
 		            <div class="menu" onclick="location.href='profile.jsp'">마이페이지</div>
 		            <div class="menu" onclick="location.href='cart.jsp'">장바구니</div>
