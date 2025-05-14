@@ -2,56 +2,35 @@
 <%@ page import="java.sql.*" %>
 <%@ page import="db.DBConnect" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nome Home</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 80px;
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 80px;
             background-color: #fff;
             border-bottom: 2px solid rgba(0, 0, 0, 0.7);
             z-index: 9;
         }
         .header_wrap {
-            margin-left: 50%;
-            transform: translateX(-50%);
-            width: 1200px;
-            height: 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-left: 50%; transform: translateX(-50%);
+            width: 1200px; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .logo {
-            width: 150px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .logo_img {
-            width: 150px;
-        }
+        .logo { width: 150px; cursor: pointer; }
+        .logo_img { width: 150px; }
         .menu_wrap {
-            width: 250px;
-            height: 80px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            width: 350px; height: 80px;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .menu {
-            font-size: 16px;
-            cursor: pointer;
-            user-select: none;
+            width: 70px; text-align: center;
+            font-size: 16px; cursor: pointer;
         }
+        .add_item { visibility: visible; }
         .section_1 {
             width: 100%;
             padding: 130px 0 50px;
@@ -59,8 +38,7 @@
         }
         .item_wrap {
             width: 1200px;
-            margin-left: 50%;
-            transform: translateX(-50%);
+            margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 30px 25px;
@@ -102,6 +80,7 @@
                 <img class="logo_img" src="images/logo.png" alt="Logo">
             </div>
             <div class="menu_wrap">
+                <div class="menu add_item" onclick="location.href='add_item.jsp'">상품 추가</div>
                 <div class="menu" onclick="location.href='login.jsp'">로그인</div>
                 <div class="menu" onclick="location.href='profile.jsp'">마이페이지</div>
                 <div class="menu" onclick="location.href='cart.jsp'">장바구니</div>
@@ -110,27 +89,45 @@
     </header>
 
     <section class="section_1">
-        <div class="item_wrap">
-            <%
-                Connection conn = DBConnect.getConnection();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT * FROM products");
-                while(rs.next()) {
-            %>
-            <a href="product.jsp" style="text-decoration: none; color: inherit;">
-                <div class="item">
-                    <img class="item_img" src="images/icon_1.png">
-                    <div class="price"><%=rs.getInt("price")%>원</div>
-                    <div class="item_name"><%=rs.getString("name")%></div>
-                </div>
-            </a>
-            <%
-                }
-                rs.close();
-                stmt.close();
-                conn.close();
-            %>
+        <div class="item_wrap" id="itemWrap">
         </div>
     </section>
+
+		<script>
+				document.addEventListener("DOMContentLoaded", () => {
+				  const itemWrap = document.getElementById("itemWrap");
+				  const products = JSON.parse(localStorage.getItem("products") || "[]");
+				
+				  itemWrap.innerHTML = ""; // 초기화
+				
+				  products.forEach((product, index) => {
+				    console.log(`렌더링 중인 상품 [${index}]:`, product);
+				
+				    const item = document.createElement("div");
+				    item.className = "item";
+				
+				    const img = document.createElement("img");
+				    img.className = "item_img";
+				    img.src = product.imageUrl || "images/no-image.png";
+				    img.alt = product.name || "상품 이미지";
+				
+				    const priceDiv = document.createElement("div");
+				    priceDiv.className = "price";
+				    priceDiv.textContent = product.price ? product.price + "원" : "가격 없음";
+				
+				    const nameDiv = document.createElement("div");
+				    nameDiv.className = "item_name";
+				    nameDiv.textContent = product.name || "이름 없음";
+				
+				    item.appendChild(img);
+				    item.appendChild(priceDiv);
+				    item.appendChild(nameDiv);
+				
+				    itemWrap.appendChild(item);
+				  });
+				});
+
+		</script>
+
 </body>
 </html>
